@@ -14,7 +14,7 @@ jobs:
     secrets: inherit
 
   run_idm:
-    name: Up Proxy and IDM
+    name: Start services
     needs: infrastructure
     environment: prd
     runs-on: ubuntu-latest
@@ -26,13 +26,6 @@ jobs:
           known_hosts: ""
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_ip: ${{ needs.infrastructure.outputs.public-ip }}
-
-      - run: |
-          cat > .env.private <<EOF
-          ${DOTENV}
-          EOF
-        env:
-          DOTENV: ${{ secrets.DOTENV_PRIVATE }}
 
       - run: |
           export $(cat .env | xargs)
