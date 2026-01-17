@@ -1,6 +1,4 @@
 inputs:
-  known_hosts:
-    required: true
   ssh_private_key:
     required: true
   ssh_ip:
@@ -13,10 +11,13 @@ runs:
       shell: bash
       run: |
         mkdir -p ~/.ssh
-        echo "${{inputs.known_hosts}}" >> ~/.ssh/known_hosts
         echo "${{inputs.ssh_private_key}}" > ~/.ssh/id_ed25519
         chmod 600 ~/.ssh/id_ed25519
         chmod 700 ~/.ssh
+
+        # NOTE: this can be hardened via a TOFU approach, but for now we accept any host key
+        ssh-keyscan -H ${{ inputs.ssh_ip }} >> ~/.ssh/known_hosts
+        chmod 600 ~/.ssh/known_hosts
 
     - name: Install Podman locally
       shell: bash
