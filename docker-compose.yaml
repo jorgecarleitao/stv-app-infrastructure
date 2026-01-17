@@ -13,7 +13,7 @@ services:
 
   # https://caddyserver.com/docs/running#docker-compose
   proxy:
-    image: caddy:2
+    image: docker.io/library/caddy:2
     container_name: proxy
     restart: unless-stopped
     ports:
