@@ -34,6 +34,6 @@ jobs:
           tar czf - . | ssh -i ~/.ssh/id_ed25519 $HOST 'cd /app && tar xzf -'
           
           # Deploy on remote
-          ssh -i ~/.ssh/id_ed25519 $HOST 'podman-compose pull && cd /app && podman-compose up --force-recreate -d && bash reload_proxy.sh'
+          ssh -i ~/.ssh/id_ed25519 $HOST 'cd /app && podman-compose pull && podman-compose up --force-recreate -d && bash reload_proxy.sh'
         env:
           HOST: root@${{ needs.infrastructure.outputs.public-ip }}
