@@ -12,39 +12,40 @@ runs:
     - name: Prepare SSH environment
       shell: bash
       run: |
-        mkdir ~/.ssh && echo "${{inputs.known_hosts}}" >> ~/.ssh/known_hosts
-        echo "${{inputs.ssh_private_key}}" >> ~/.ssh/id_ed25519
-        sudo chmod 600 ~/.ssh/id_ed25519
-        cat > ~/.ssh/config <<EOF
-        Host remote-docker-host
-            HostName ${{inputs.ssh_ip}}
-            User root
-            StrictHostKeyChecking no
-            UserKnownHostsFile=/dev/null
-            IdentityFile ~/.ssh/id_ed25519
-        EOF
+        mkdir -p ~/.ssh
+        echo "${{inputs.known_hosts}}" >> ~/.ssh/known_hosts
+        echo "${{inputs.ssh_private_key}}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        chmod 700 ~/.ssh
+
+    - name: Install Podman locally
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y podman
+        podman --version
 
     - name: Install Podman on remote
       shell: bash
       run: |
-        ssh remote-docker-host 'bash -s' << 'ENDSSH'
+        ssh -i ~/.ssh/id_ed25519 root@${{ inputs.ssh_ip }} 'bash -s' << 'ENDSSH'
         set -e
-        
+
         # Check if Podman is already installed
         if command -v podman &> /dev/null; then
           echo "Podman is already installed"
           podman --version
           exit 0
         fi
-        
+
         echo "Installing Podman (rootless container runtime)..."
-        
+
         # Update package index
         apt-get update
-        
+
         # Install Podman (available in Ubuntu 24.04 repos)
         apt-get install -y podman podman-compose
-        
+
         # Enable rootless users to bind to privileged ports 80 and 443
         sysctl -w net.ipv4.ip_unprivileged_port_start=80
         echo "net.ipv4.ip_unprivileged_port_start=80" >> /etc/sysctl.conf
@@ -57,8 +58,11 @@ runs:
       shell: bash
       run: |
         # Configure Podman to connect remotely via SSH
-        export CONTAINER_HOST="ssh://root@remote-docker-host/run/user/0/podman/podman.sock"
-        echo "CONTAINER_HOST=$CONTAINER_HOST" >> $GITHUB_ENV
+        export CONTAINER_HOST="ssh://root@${{ inputs.ssh_ip }}/run/podman/podman.sock"
+        export CONTAINER_SSHKEY="$HOME/.ssh/id_ed25519"
+
+        echo "CONTAINER_HOST=$CONTAINER_HOST" >> "$GITHUB_ENV"
+        echo "CONTAINER_SSHKEY=$CONTAINER_SSHKEY" >> "$GITHUB_ENV"
 
         # Test connection
         podman --remote info

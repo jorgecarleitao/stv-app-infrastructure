@@ -1,6 +1,6 @@
 vm:
   keys:
-    jorgecarleitao: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMlhFA81TvA9BBMBJlPcXyEIbcVG5OODkOy03scUvfL jorgecarleitao@gmail.com
+    operator: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMlhFA81TvA9BBMBJlPcXyEIbcVG5OODkOy03scUvfL jorgecarleitao@gmail.com
     github-actions: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO4Y0fy3IorNp7S2xh/PKNcjV2GS7hr4Dfneh3YP0btp jorgecarleitao@gmail.com
   server_type: cx23
   location: nbg1
