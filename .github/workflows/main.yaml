@@ -13,7 +13,7 @@ jobs:
       environment: prd
     secrets: inherit
 
-  run_idm:
+  services:
     name: Start services
     needs: infrastructure
     environment: prd
@@ -23,12 +23,17 @@ jobs:
 
       - uses: ./.github/actions/prepare-docker
         with:
-          known_hosts: ""
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_ip: ${{ needs.infrastructure.outputs.public-ip }}
 
-      - run: |
-          export $(cat .env | xargs)
-          podman compose up -d
-          export $(cat .env.private | xargs)
-          ./reload_proxy.sh
+      - name: Deploy services
+        shell: bash
+        run: |
+          # Clear and copy entire repo to remote using tar over SSH
+          ssh -i ~/.ssh/id_ed25519 $HOST 'rm -rf /app && mkdir -p /app'
+          tar czf - . | ssh -i ~/.ssh/id_ed25519 $HOST 'cd /app && tar xzf -'
+          
+          # Deploy on remote
+          ssh -i ~/.ssh/id_ed25519 $HOST 'cd /app && podman-compose up -d && bash reload_proxy.sh'
+        env:
+          HOST: root@${{ needs.infrastructure.outputs.public-ip }}

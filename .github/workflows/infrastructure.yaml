@@ -9,10 +9,10 @@ on:
     outputs:
       public-ip:
         description: "The IPv4 address of the deployed server"
-        value: ${{ jobs.deploy_infra.outputs.public-ip }}
+        value: ${{ jobs.deploy.outputs.public-ip }}
 
 jobs:
-  deploy_infra:
+  deploy:
     name: Deploy infrastructure
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
