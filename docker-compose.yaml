@@ -1,0 +1,33 @@
+services:
+  elections:
+    image: ghcr.io/jorgecarleitao/stv-app:main
+    container_name: elections
+    restart: unless-stopped
+    user: "1000:1000"
+    expose:
+      - "8080"
+    environment:
+      RUST_LOG: info
+    volumes:
+      - elections-data:/app/data
+
+  # https://caddyserver.com/docs/running#docker-compose
+  proxy:
+    image: caddy:2
+    container_name: proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - proxy-config:/config
+      - proxy-data:/data
+    environment:
+      DOMAIN: ${DOMAIN}
+      CADDY_EMAIL: ${ACME_CONTACT}
+
+volumes:
+  proxy-config:
+  proxy-data:
+  elections-data:

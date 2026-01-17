@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  infrastructure:
+    name: Deploy infrastructure
+    uses: ./.github/workflows/infrastructure.yaml
+    with:
+      environment: prd
+    secrets: inherit
+
+  run_idm:
+    name: Up Proxy and IDM
+    needs: infrastructure
+    environment: prd
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/prepare-docker
+        with:
+          known_hosts: ""
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_ip: ${{ needs.infrastructure.outputs.public-ip }}
+
+      - run: |
+          cat > .env.private <<EOF
+          ${DOTENV}
+          EOF
+        env:
+          DOTENV: ${{ secrets.DOTENV_PRIVATE }}
+
+      - run: |
+          export $(cat .env | xargs)
+          podman compose up -d
+          export $(cat .env.private | xargs)
+          ./reload_proxy.sh

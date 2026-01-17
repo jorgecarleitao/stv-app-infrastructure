@@ -1,0 +1,52 @@
+name: Deploy infrastructure
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+    outputs:
+      public-ip:
+        description: "The IPv4 address of the deployed server"
+        value: ${{ jobs.deploy_infra.outputs.public-ip }}
+
+jobs:
+  deploy_infra:
+    name: Deploy infrastructure
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Create config"
+        run: |
+          cat > configuration/infrastructure/backend.hcl <<EOF
+          bucket     = "${BUCKET_NAME}"
+          key        = "infrastructure/configuration/infrastructure/terraform.tfstate"
+          endpoints  = { s3 = "https://fsn1.your-objectstorage.com" }
+          EOF
+
+          cat > "configuration/infrastructure/configuration.yaml" <<EOF
+          keys:
+            ${SSH_KEY_NAME}:
+          server_type: cx32
+          location: fsn1
+          EOF
+        env:
+          BUCKET_NAME: ${{ vars.TF_STATE_BUCKET_NAME }}
+          SSH_KEY_NAME: github-actions
+
+      - run: echo "${{ secrets.INFRASTRUCTURE_CONFIGURATION_DOTENV }}" | base64 --decode > configuration/infrastructure/.env
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: |
+          export $(cat .env | xargs)
+          terraform init -backend-config=backend.hcl
+          terraform apply -input=false -auto-approve
+          echo "public-ip=$(terraform output -raw ipv4)" >> $GITHUB_OUTPUT
+        name: Terraform apply
+        id: tf-output
+    outputs:
+      public-ip: ${{ steps.tf-output.outputs.public-ip }}

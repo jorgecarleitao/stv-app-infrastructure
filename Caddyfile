@@ -1,0 +1,6 @@
+{$DOMAIN} {
+	reverse_proxy elections:8080 {
+		lb_policy cookie api_sticky
+		transport http
+	}
+}
