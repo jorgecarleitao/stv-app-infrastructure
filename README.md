@@ -1,10 +1,10 @@
-# STV App (stvote.eu) - deploy
+# STV App (stvote.eu) - infrastructure
 
 This repository maintains the infrastructure of [stvote.eu](https://stvote.eu).
 
 The source code of the application is at:
 
-* [stv-app-deploy](https://github.com/jorgecarleitao/stv-app-deploy)
+* [stv-app-infrastructure](https://github.com/jorgecarleitao/stv-app-infrastructure)
 * [stv-app](https://github.com/jorgecarleitao/stv-app)
 * [stv-app-frontend](https://github.com/jorgecarleitao/stv-app-frontend)
 
