@@ -1,6 +1,6 @@
 services:
   elections:
-    image: ghcr.io/jorgecarleitao/stv-app@sha256:c30a43e176a966a5d9cd612fe9389a2ee2bd7cab8446d96bc2ec8b0b16749b0a
+    image: ghcr.io/jorgecarleitao/stv-app@sha256:629ad44fad19dd5c0aff118dd88e1fc02f22cef764204208552692aa778225dc
     container_name: elections
     restart: unless-stopped
     user: "1000:1000"
