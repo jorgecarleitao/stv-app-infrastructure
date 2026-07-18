@@ -1,6 +1,17 @@
 {$DOMAIN} {
-	reverse_proxy elections:8080 {
-		lb_policy cookie api_sticky
-		transport http
+	handle /api/* {
+		reverse_proxy elections:8080 {
+			lb_policy cookie api_sticky
+			transport http
+		}
+	}
+	handle /swagger-ui {
+		reverse_proxy elections:8080 {
+			lb_policy cookie api_sticky
+			transport http
+		}
+	}
+	handle {
+		reverse_proxy frontend:80
 	}
 }
