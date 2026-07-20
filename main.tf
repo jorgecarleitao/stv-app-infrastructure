@@ -11,7 +11,7 @@ terraform {
   }
 
   backend "s3" {
-    region = "main"
+    region                      = "main"
     skip_credentials_validation = true
     skip_metadata_api_check     = true
     skip_requesting_account_id  = true
@@ -24,19 +24,19 @@ locals {
 }
 
 resource "hcloud_ssh_key" "main" {
-  for_each = {for k, v in local.configuration.vm.keys : k => v if v != null}
+  for_each   = { for k, v in local.configuration.vm.keys : k => v if v != null }
   name       = each.key
   public_key = each.value
 }
 
 data "hcloud_ssh_key" "main" {
-  for_each = {for k, v in local.configuration.vm.keys : k => v if v == null}
-  name = each.key
+  for_each = { for k, v in local.configuration.vm.keys : k => v if v == null }
+  name     = each.key
 }
 
 resource "hcloud_network" "main" {
-    ip_range = "10.0.0.0/16"
-    name = "main"
+  ip_range = "10.0.0.0/16"
+  name     = "main"
 }
 
 resource "hcloud_network_subnet" "main" {
@@ -47,17 +47,17 @@ resource "hcloud_network_subnet" "main" {
 }
 
 resource "hcloud_server" "main" {
-  name        = "main"
-  image       = "ubuntu-24.04"
-  server_type = local.configuration.vm.server_type
-  location = local.configuration.vm.location
-  ssh_keys = concat([for k in data.hcloud_ssh_key.main : k.id], [for k in hcloud_ssh_key.main : k.id])
+  name                       = "main"
+  image                      = "ubuntu-24.04"
+  server_type                = local.configuration.vm.server_type
+  location                   = local.configuration.vm.location
+  ssh_keys                   = concat([for k in data.hcloud_ssh_key.main : k.id], [for k in hcloud_ssh_key.main : k.id])
   ignore_remote_firewall_ids = true
-  keep_disk = true
+  keep_disk                  = true
   network {
     network_id = hcloud_network.main.id
     ip         = "10.0.0.2"
-    alias_ips = [] # https://github.com/hetznercloud/terraform-provider-hcloud/issues/650#issuecomment-1497160625
+    alias_ips  = [] # https://github.com/hetznercloud/terraform-provider-hcloud/issues/650#issuecomment-1497160625
   }
   depends_on = [hcloud_network_subnet.main]
   lifecycle {
@@ -65,13 +65,22 @@ resource "hcloud_server" "main" {
   }
 }
 
-output ipv4 {
+resource "hcloud_volume" "elections_data" {
+  name              = "elections-data"
+  size              = 10
+  server_id         = hcloud_server.main.id
+  automount         = true
+  format            = "ext4"
+  delete_protection = true
+}
+
+output "ipv4" {
   value       = hcloud_server.main.ipv4_address
   sensitive   = false
   description = "The IPv4 on the public internet"
 }
 
-output ipv6 {
+output "ipv6" {
   value       = hcloud_server.main.ipv6_address
   sensitive   = false
   description = "The IPv6 on the public internet"

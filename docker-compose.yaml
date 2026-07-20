@@ -16,7 +16,7 @@ services:
     environment:
       RUST_LOG: info
     volumes:
-      - elections-data:/app/data
+      - /mnt/volumes/elections-data:/app/data
 
   # https://caddyserver.com/docs/running#docker-compose
   proxy:
@@ -37,4 +37,3 @@ services:
 volumes:
   proxy-config:
   proxy-data:
-  elections-data:
