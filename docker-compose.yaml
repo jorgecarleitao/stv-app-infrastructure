@@ -7,7 +7,7 @@ services:
       - "80"
 
   elections:
-    image: ghcr.io/jorgecarleitao/stv-app@sha256:87f7cb4e3c0186c5d59ec7d3225738f7f4bffae95790bc0d4ee687b8724b7f45
+    image: ghcr.io/jorgecarleitao/stv-app@sha256:8037d41adfd9b23e6df0372eeb4bf25a13497630b347c3a156a7090ff27257d3
     container_name: elections
     restart: unless-stopped
     user: "1000:1000"
