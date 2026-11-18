@@ -1,13 +1,13 @@
 services:
   frontend:
-    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:b92bd07841a406ec6b5affb487df7f21478c12865a987b3f352073c2eebe2809
+    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:f167a06ceb3c9948b20c6f468eeccbcdfdb1b0ba3c493d32ccdabdcb9896d30a
     container_name: frontend
     restart: unless-stopped
     expose:
       - "80"
 
   elections:
-    image: ghcr.io/jorgecarleitao/stv-app@sha256:edfd358d85feb8a254b289ce17242dc7578deaed5ccd405d827b439071cd2b71
+    image: ghcr.io/jorgecarleitao/stv-app@sha256:6634f251caf7d615e9ae6312926e946fe982a8dfaded44ee1e31633561ed68c3
     container_name: elections
     restart: unless-stopped
     user: "1000:1000"
@@ -20,7 +20,7 @@ services:
 
   # https://caddyserver.com/docs/running#docker-compose
   proxy:
-    image: docker.io/library/caddy:2
+    image: docker.io/library/caddy:2.11.9
     container_name: proxy
     restart: unless-stopped
     ports:
