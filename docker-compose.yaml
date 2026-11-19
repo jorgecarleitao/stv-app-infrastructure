@@ -1,13 +1,13 @@
 services:
   frontend:
-    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:004b614006ed051d7692f283b893293a1e652de074206ae7a3c62af45566420c
+    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:eba710dc942c3a937a9e74d3c26824e338bdb22dabea40cae6fe789271309258
     container_name: frontend
     restart: unless-stopped
     expose:
       - "80"
 
   elections:
-    image: ghcr.io/jorgecarleitao/stv-app@sha256:6a492b06c8cbd80d39d0352e74f43057f20ba52644cbbd01022d76158093730f
+    image: ghcr.io/jorgecarleitao/stv-app@sha256:b9f6a82fcbe77402787f37a55a1503f896cc2eb677759e895c40c6a064d165bf
     container_name: elections
     restart: unless-stopped
     user: "1000:1000"
