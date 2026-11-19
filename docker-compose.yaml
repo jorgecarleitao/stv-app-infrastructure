@@ -32,6 +32,7 @@ services:
       - proxy-data:/data
     environment:
       DOMAIN: ${DOMAIN}
+      OLD_DOMAIN: ${OLD_DOMAIN}
       CADDY_EMAIL: ${ACME_CONTACT}
 
 volumes:

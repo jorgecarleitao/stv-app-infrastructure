@@ -1,3 +1,7 @@
+{$OLD_DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
+
 {$DOMAIN} {
 	handle /api/* {
 		reverse_proxy elections:8080 {

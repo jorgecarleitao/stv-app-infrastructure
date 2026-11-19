@@ -50,7 +50,10 @@ Change `configuration.yaml` with your specific values:
 * `cloudflare.account_id`: your cloudflare account id
 * `cloudflare.zones`: the domain you rented
 
-Change `.env` with your information
+Change `.env` with your information:
+
+* `DOMAIN`: the primary domain served by the app (must be a zone in `cloudflare.zones`)
+* `OLD_DOMAIN`: optional legacy domain that is 301-redirected to `DOMAIN` by Caddy (also must be a zone in `cloudflare.zones` so its DNS records keep pointing at the server)
 
 ### 4. Configure GitHub Actions Secrets
 

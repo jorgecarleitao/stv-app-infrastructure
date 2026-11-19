@@ -8,3 +8,4 @@ cloudflare:
   account_id: "0437df3d3066f074c8f1055ebcac579c"
   zones:
     open-vote.eu: null
+    stvote.eu: null
