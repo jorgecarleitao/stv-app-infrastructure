@@ -7,4 +7,4 @@ vm:
 cloudflare:
   account_id: "0437df3d3066f074c8f1055ebcac579c"
   zones:
-    stvote.eu: null
+    open-vote.eu: null

@@ -1,6 +1,6 @@
-# STV App (stvote.eu) - infrastructure
+# Open Vote (open-vote.eu) - infrastructure
 
-This repository maintains the infrastructure of [stvote.eu](https://stvote.eu).
+This repository maintains the infrastructure of [open-vote.eu](https://open-vote.eu).
 
 The source code of the application is at:
 
