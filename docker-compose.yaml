@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:d0baf57bd318eae17f6992946e3a46b813d053009ebdc3c752cb43406bece63b
+    image: ghcr.io/jorgecarleitao/stv-app-frontend@sha256:f7bb19cd5597dddc46519e207d127337d2c667cbcd0306719a9271e34d22ec6f
     container_name: frontend
     restart: unless-stopped
     expose:
